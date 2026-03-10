@@ -1,6 +1,5 @@
 import os
 import subprocess
-import shutil
 import httpx
 import tempfile
 import uuid
@@ -10,7 +9,7 @@ class AudioProcessor:
         self.server_url = server_url
         self.tmp_dir = tempfile.gettempdir()
 
-    def _extract_wav(self, mp4_path: str, output_wav_path: str) -> bool:
+    def _extract_wav(self, mp4_path: str, output_wav_path: str) -> None:
         """
         Extracts 32kHz Mono WAV from MP4 using FFmpeg.
         Uses subprocess.run (synchronous) - safe to call inside a QThread.
@@ -32,7 +31,6 @@ class AudioProcessor:
                 stderr=subprocess.PIPE,
                 creationflags=creationflags
             )
-            return True
         except subprocess.CalledProcessError as e:
             stderr_msg = e.stderr.decode(errors='replace') if e.stderr else "No output"
             raise Exception(
